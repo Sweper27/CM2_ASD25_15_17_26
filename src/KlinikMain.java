@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class KlinikMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        DLLFilm15 film = new DLLFilm15();
+        Klinik klinik = new Klinik();
         Pasien data;
         int pilih;
 
@@ -23,12 +23,12 @@ public class KlinikMain {
             switch (pilih) {
                 case 1:
                     data = psn(sc);
-                    film.addLast15(data);
+                    klinik.tambahPasien(data);
                     System.out.println("Pasien masuk ke dalam antrian.");
                     break;
                 case 2:
                     System.out.println("----- Antrian Pasien -----");
-                    film.print15();
+                    klinik.lihatAntrian();
                     break;
                 case 3:
                     System.out.println("Pilih Dokter:");
@@ -36,17 +36,17 @@ public class KlinikMain {
                     String idDokter = sc.nextLine();
                     System.out.print("Input durasi layanan (jam): ");
                     int durasi = sc.nextInt();
-                    film.searchById15();
+                    klinik.searchById();
                     break;
                 case 4:
-                    film.removeFirst15();
+                    klinik.removeFirst();
                     break;
                 case 5:
                     System.out.println("----- Riwayat Transaksi -----");
-                    film.removeLast15();
+                    klinik.removeLast();
                     break;
                 case 6:
-                    System.out.println("Sisa antrian: " + film.getJumlahAntrian());
+                    System.out.println("Sisa antrian: " + klinik.getJumlahAntrian());
                     break;
                 case 0:
                     System.out.println("Keluar dari program.");
