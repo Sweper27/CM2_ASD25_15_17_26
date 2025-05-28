@@ -12,7 +12,7 @@ public class Klinik {
 
     public void tambahPasien(String nama, String nik, String keluhan) {
         Pasien pasien = new Pasien(nama, nik, keluhan);
-        Node baru = new Node(baru, pasien, baru);
+        Node baru = new Node(null, pasien, null);;
         if (headAntrian == null) {
             headAntrian = baru;
         } else {
@@ -68,7 +68,7 @@ public class Klinik {
 
     if (dokter != null) {
         transaksiLayanan t = new transaksiLayanan(pasien, dokter, durasi);
-        Node baru = new Node(baru, t, baru);
+        Node baru = new Node(null, pasien, null);
         if (headTransaksi == null) {
             headTransaksi = baru;
         } else {
@@ -81,7 +81,7 @@ public class Klinik {
         System.out.println(">> Pasien telah dilayani, transaksi berhasil dicatat");
     } else {
         System.out.println(">> Dokter tidak ditemukan");
-        Node ulang = new Node(ulang, pasien, ulang);
+        Node ulang = new Node(null, pasien, null);
         ulang.next = headAntrian;
         headAntrian =ulang;
     }
