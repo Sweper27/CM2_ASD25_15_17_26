@@ -1,106 +1,111 @@
+import java.util.Scanner;
+
 public class Klinik {
-    Node headPasien, headDokter, headLayanan;
-    int size;
+    Node headAntrian = null;
+    Node headTransaksi = null;
+    Dokter[] dokterList = {
+        new Dokter("dr01", "Wike Ratanca"),
+        new Dokter("dr02", "Santi Runica"),
+        new Dokter("dr03", "Aam Antanica"),
+        new Dokter("dr04", "Slamet Sugito")
+    };
 
-    public Klinik() {
-        headPasien = headDokter = headLayanan = null;
-        size = 0;
-    }
-
-    public boolean isEmpty15() {
-        return headPasien == headDokter == headLayanan  == null;
-    }
-
-    public void addLast(String nama, String nik, String keluhan) {
-        Pasien data = new Pasien(nama, nik, keluhan);
-        NodePasien ndInput = new NodePasien(null, data, null);
-            headPasien = ndInput;
+    public void tambahPasien(String nama, String nik, String keluhan) {
+        Pasien pasien = new Pasien(nama, nik, keluhan);
+        Node baru = new Node(baru, pasien, baru);
+        if (headAntrian == null) {
+            headAntrian = baru;
         } else {
-            NodePasien temp = headPasien;
-            while (temp.next != null) {
-                temp = temp.next;
+            Node current = headAntrian;
+            while (current.next != null) {
+            current = current.next;
             }
-            temp.next = ndInput;
-            ndInput.prev = temp;
+            current.next = baru;
+            baru.prev = current; 
         }
-        size++;
+        System.out.println(">> Pasien masuk ke dalam antrian");
     }
 
-    public void removeFirst() {
-        if (isEmpty15()) {
-            System.out.println("Antrian masih kosong, tidak ada yang bisa dihapus.");
+    public void lihatAntrian() {
+        System.out.println("-- Antrian Pasien --");
+        Node current = headAntrian;
+        while (current != null) {
+            Pasien p = current.pasien;
+            if (p != null) {
+                System.out.println(p.nama + "\t" + p.nik + "\t" + p.keluhan);
+            }
+            current = current.next;
+        }
+    }
+
+    public void layaniPasien(Scanner scanner) {
+    if (headAntrian == null) {
+        System.out.println(">> Tidak ada pasien dalam antrian");
+        return;
+    }
+
+    Pasien pasien = headAntrian.pasien;
+    headAntrian = headAntrian.next;
+
+    System.out.println("Pasien " + pasien.nama + " dipanggil");
+    System.out.println("Daftar dokter jaga:");
+    for (int i = 0; i < dokterList.length; i++) {
+        System.out.println(dokterList[i].idDokter + "\t" + dokterList[i].nama);
+    }
+
+    System.out.print("Input kode dokter: ");
+    String kode = scanner.nextLine();
+    System.out.print("Input durasi layanan (jam): ");
+    int durasi = Integer.parseInt(scanner.nextLine());
+
+    Dokter dokter = null;
+    for (int i = 0; i < dokterList.length; i++) {
+        if (dokterList[i].idDokter.equals(kode)) {
+            dokter = dokterList[i];
+            break;
+        }
+    }
+
+    if (dokter != null) {
+        transaksiLayanan t = new transaksiLayanan(pasien, dokter, durasi);
+        Node baru = new Node(baru, t, baru);
+        if (headTransaksi == null) {
+            headTransaksi = baru;
         } else {
-            System.out.println("Pasien" + headPasien.data.nama + " dipanggil");
-            headPasien = head.next;
-            if (head != null) {
-                head.prev = null;
+            Node current = headTransaksi;
+            while (current.next != null) {
+                current = current.next;
             }
-            size--;
+            current.next = baru;
         }
+        System.out.println(">> Pasien telah dilayani, transaksi berhasil dicatat");
+    } else {
+        System.out.println(">> Dokter tidak ditemukan");
+        Node ulang = new Node(ulang, pasien, ulang);
+        ulang.next = headAntrian;
+        headAntrian =ulang;
+    }
+}
+
+    public void cekSisaAntrian() {
+        int count = 0;
+        Node current = headAntrian;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        System.out.println(">> Sisa antrian: " + count);
     }
 
-    public void print15() {
-        if (isEmpty15()) {
-            System.out.println("Antrian kosong");
-            return;
-        } else {
-            NodeVaksinasi15 temp = head;
-            System.out.println("+++++++++++++++++++++++++++++");
-            System.out.println("Daftar Pengantri Vaksin");
-            System.out.println("+++++++++++++++++++++++++++++");
-            System.out.printf("| %-8s | %-10s |\n", "No.", "Nama");
-            while (temp != null) {
-                System.out.printf("| %-8d | %-10s |\n", temp.data.no, temp.data.nama);
-                temp = temp.next;
+    public void lihatRiwayat() {
+        System.out.println("-- Riwayat Transaksi --");
+        Node current = headTransaksi;
+        while (current != null) {
+            transaksiLayanan t = current.transaksi;
+            if (t != null) {
+                System.out.println(t.pasien.nama + "\t" + t.dokter.nama + "\t" + t.durasiLayanan + "\t" + t.biaya);
             }
-            System.out.println("Sisa Antrian: " + size);
+            current = current.next;
         }
-    }
-
-    public void searchById15(String idFilm) {
-        if (isEmpty15()) {
-            System.out.println("Data Film Kosong!");
-            return;
-        }
-        NodeFilm15 temp = head;
-        int posisi = 0;
-        boolean ditemukan = false;
-        while (temp != null) {
-            if (temp.data.idFilm.equals(idFilm)) {
-                System.out.println("Data ID Film " + temp.data.idFilm + " ditemukan di node ke-" + posisi);
-                System.out.println("IDENTITAS:");
-                temp.data.tampilInformasi15();
-                ditemukan = true;
-                break;
-            }
-            temp = temp.next;
-            posisi++;
-        }
-        if (!ditemukan) {
-            System.out.println("Data Film dengan ID " + idFilm + " tidak ditemukan.");
-        }
-    }
-
-    public void sortRatingDesc15() {
-        if (isEmpty15()) {
-            System.out.println("Data Film Kosong!");
-            return;
-        }
-        boolean swapped;
-        do {
-            swapped = false;
-            NodeFilm15 curr = head;
-            while (curr != null && curr.next != null) {
-                if (curr.data.rating < curr.next.data.rating) {
-                    Film15 temp = curr.data;
-                    curr.data = curr.next.data;
-                    curr.next.data = temp;
-                    swapped = true;
-                }
-                curr = curr.next;
-            }
-        } while (swapped);
-        print15();
-        System.out.println("Data berhasil diurutkan berdasarkan rating (desc).");
     }
 }
