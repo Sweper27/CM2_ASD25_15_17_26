@@ -28,17 +28,18 @@ public class Klinik {
 
     public void lihatAntrian() {
         System.out.println("-- Antrian Pasien --");
+        System.out.printf("%-10s %-15s %-10s\n", "Nama", "NIK", "Keluhan");
         Node current = headAntrian;
         while (current != null) {
             Pasien p = current.pasien;
             if (p != null) {
-                System.out.println(p.nama + "\t" + p.nik + "\t" + p.keluhan);
+                System.out.printf("%-10s %-15s %-10s\n", p.nama, p.nik, p.keluhan);
             }
             current = current.next;
         }
     }
 
-    public void layaniPasien(Scanner scanner) {
+   public void layaniPasien(Scanner scanner) {
     if (headAntrian == null) {
         System.out.println(">> Tidak ada pasien dalam antrian");
         return;
@@ -49,10 +50,12 @@ public class Klinik {
 
     System.out.println("Pasien " + pasien.nama + " dipanggil");
     System.out.println("Daftar dokter jaga:");
+    System.out.printf("%-10s %-10s\n", "Kode", "Nama");
     for (int i = 0; i < dokterList.length; i++) {
-        System.out.println(dokterList[i].idDokter + "\t" + dokterList[i].nama);
+        System.out.printf("%-10s %-10s\n", dokterList[i].idDokter, dokterList[i].nama);
     }
 
+    System.out.println("Pilih Dokter:");
     System.out.print("Input kode dokter: ");
     String kode = scanner.nextLine();
     System.out.print("Input durasi layanan (jam): ");
@@ -68,7 +71,7 @@ public class Klinik {
 
     if (dokter != null) {
         transaksiLayanan t = new transaksiLayanan(pasien, dokter, durasi);
-        Node baru = new Node(null, pasien, null);
+        Node baru = new Node(null, t, null);
         if (headTransaksi == null) {
             headTransaksi = baru;
         } else {
@@ -98,14 +101,41 @@ public class Klinik {
     }
 
     public void lihatRiwayat() {
-        System.out.println("-- Riwayat Transaksi --");
-        Node current = headTransaksi;
-        while (current != null) {
+    System.out.printf("%-10s %-15s %-10s %-10s\n", "Nama", "Nama Dokter", "Durasi", "Total");
+
+    Node current = headTransaksi;
+    while (current != null) {
+        if (current.transaksi != null) {
             transaksiLayanan t = current.transaksi;
-            if (t != null) {
-                System.out.println(t.pasien.nama + "\t" + t.dokter.nama + "\t" + t.durasiLayanan + "\t" + t.biaya);
+            System.out.printf("%-10s %-15s %-10d %-10d\n", t.pasien.nama, t.dokter.nama, t.durasiLayanan, t.HitungBiaya());
+        }
+        current = current.next;
+    }
+}
+    
+    public void sortRiwayatTransaksiDESC() {
+    if (headTransaksi == null || headTransaksi.next == null) {
+        System.out.println(">> Tidak ada transaksi yang perlu diurutkan");
+        return;
+    }
+
+    boolean swapped;
+    do {
+        swapped = false;
+        Node current = headTransaksi;
+
+        while (current.next != null) {
+            transaksiLayanan t1 = current.transaksi;
+            transaksiLayanan t2 = current.next.transaksi;
+
+            if (t1 != null && t2 != null && t1.pasien.nama.compareToIgnoreCase(t2.pasien.nama) < 0) {
+                current.transaksi = t2;
+                current.next.transaksi = t1;
+                swapped = true;
             }
+
             current = current.next;
         }
-    }
+    } while (swapped);
+}
 }

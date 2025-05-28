@@ -2,7 +2,7 @@ public class transaksiLayanan {
     Pasien pasien;
     Dokter dokter;
     int durasiLayanan;
-    int biaya;
+    int biaya = 50000;
 
     public transaksiLayanan(Pasien pasien , Dokter dokter , int durasi){
         this.pasien = pasien;
@@ -10,7 +10,7 @@ public class transaksiLayanan {
         this.durasiLayanan = durasi;
     }
     public int HitungBiaya(){
-        return durasiLayanan * 50000;
+        return durasiLayanan * biaya;
     }
     public void tampilkanInformasi() {
         System.out.printf("%-10s %-10s %-10s\n", "Pasien", "Dokter", "Durasi");
